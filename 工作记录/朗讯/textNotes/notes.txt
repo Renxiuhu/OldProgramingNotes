@@ -1,0 +1,78 @@
+1, dbg命令
+打开：
+dbg spo module on
+dbg spo time on
+dbg spt -l 0  -m IWU
+dbg spt -l 0  -m STKM
+dbg spt -l 0  -m UPWM
+dbg spt -l 0  -m SIPM
+dbg spt -l 0  -m  SAPI
+dbg spt -l 0  -m vsip
+
+关闭:
+dbg spt -l 255
+
+2, 上传权限
+LT:
+tapi enable write /data
+ tapi enable write /data/Sw
+
+ NT:
+ tapi enable write /Sw
+
+3，lab配置
+
+configure mstp general disable-stp 
+configure interface shub port [0...7] port-type network admin-status up 
+configure vlan shub id 18 mode voice-vlan
+configure vlan shub id 18 egress-port network:2
+configure vlan shub id 18 egress-port lt:1/1/[1...8]
+configure vlan shub id 18 egress-port lt:1/1/[12...19]
+configure vlan shub id 4093
+configure vlan shub id 4093 egress-port network:2
+configure vlan shub id 4093 untag-port network:2
+configure bridge shub port 2 pvid 4093
+configure ip shub vrf 1 fast-path-mode:ena-user-user-com name voice
+configure interface shub vlan-id 18
+configure interface shub ip 18
+configure interface shub ip 18 vrf-id 1
+configure interface shub ip 18 ip-addr 21.1.1.70/24 
+configure interface shub vlan-id 18 admin-status up
+configure ip shub vrf 1 route-dest 0.0.0.0/0 next-hop 21.1.1.1 vlan-id 18
+
+//=====================configure sip application==================================
+1.plan card
+configure equipment slot 1/1/3  planned-type npot-c capab-profile sip 
+
+
+2.configure sip server,dial plan and digitmap
+//设置sip server
+configure voice sip server srv_01 admin-domain-name vsp1 port 5060 priority 10 server-role registrar-and-proxy site primary-site address dns:pcgw-stdn.imsgroup0-000.ism01.qd.lucentlab.com  dnsname-type fqdn 
+configure voice sip server srv_01 admin-status up
+configure voice sip dialplan dp_01 pre-activated on
+configure voice sip digitmap dp_01 type regular rule xxxxxxxx 
+
+
+3.configure sip-ua, sip-ua-ap and vsp
+//设置sip UA
+configure voice sip user-agent ua_01 signal-gateway-ip 21.1.1.1 signal-vlan-id 18 admin-status up ip-addr-policy centralized ip-config-mode manual
+configure voice sip user-agent-ap ua_01 slot-id nt signal-ip 21.1.1.70/24 
+configure voice sip vsp vsp1 domain-name qd.lucentlab.com
+configure voice sip user-agent-ap ua_01 slot-id nt admin-status up
+//设置注册管理器
+configure voice sip register vsp1 register-uri pcgw-stdn.imsgroup0-000.ism01.qd.lucentlab.com
+configure voice sip transport udp  provider-name vsp1 admin-status up
+configure voice sip vsp vsp1 admin-status up
+//设置sip的DNS服务器
+configure voice sip dnsserver dns_srv_01 admin-domain-name vsp1 address ipv4:135.252.37.114 admin-status down
+configure voice sip dnsserver dns_srv_01 admin-status up
+//设置对话计时器
+configure voice sip system session-timer admin-status up 
+
+
+4.configure sip user
+//配置sip用户，包括电话号码等
+configure voice sip isdntermination 1/1/3/1 uri +13288617301@qd.lucentlab.com directory-number 88617301 user-name 13288617301 md5-realm qd.lucentlab.com md5-password plain:passwordlss admin-status up
+configure voice sip isdntermination 1/1/3/2 uri +13288617302@qd.lucentlab.com directory-number 88617302 user-name 13288617302 md5-realm qd.lucentlab.com md5-password plain:passwordlss admin-status up
+
+configure voice sip isdntermination 1/1/3/2 uri +13290618501@qd.lucentlab.com directory-number 90618501 user-name 13290618501 md5-realm qd.lucentlab.com md5-password plain:passwordlss admin-status up
