@@ -1,7 +1,7 @@
 1, dbg命令
 打开：
-dbg spo module on
 dbg spo time on
+dbg spo module on
 dbg spt -l 0  -m IWU
 dbg spt -l 0  -m STKM
 dbg spt -l 0  -m UPWM
@@ -20,7 +20,22 @@ tapi enable write /data
  NT:
  tapi enable write /Sw
 
-3，lab配置
+3，模拟通话
+sipw hookoff 1
+sipw dial 1 8
+sipw dial 1 8
+sipw dial 1 6
+sipw dial 1 1
+sipw dial 1 7
+sipw dial 1 3
+sipw dial 1 0
+sipw dial 1 2
+sipw hookoff 3
+
+sipw hookon 1
+sipw hookon 3
+
+4，lab配置
 
 configure mstp general disable-stp 
 configure interface shub port [0...7] port-type network admin-status up 
