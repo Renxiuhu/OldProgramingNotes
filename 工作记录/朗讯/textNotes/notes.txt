@@ -91,3 +91,5 @@ configure voice sip isdntermination 1/1/3/1 uri +13288617301@qd.lucentlab.com di
 configure voice sip isdntermination 1/1/3/2 uri +13288617302@qd.lucentlab.com directory-number 88617302 user-name 13288617302 md5-realm qd.lucentlab.com md5-password plain:passwordlss admin-status up
 
 configure voice sip isdntermination 1/1/3/2 uri +13290618501@qd.lucentlab.com directory-number 90618501 user-name 13290618501 md5-realm qd.lucentlab.com md5-password plain:passwordlss admin-status up
+
+configure voice sip isdntermination 1/1/3/4 uri +13291618501@qd.lucentlab.com directory-number 91618501 user-name 13291618501 md5-realm qd.lucentlab.com md5-password plain:passwordlss admin-status up
