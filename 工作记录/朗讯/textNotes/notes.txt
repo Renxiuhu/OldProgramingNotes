@@ -6,8 +6,16 @@ dbg spt -l 0  -m IWU
 dbg spt -l 0  -m STKM
 dbg spt -l 0  -m UPWM
 dbg spt -l 0  -m SIPM
-dbg spt -l 0  -m  SAPI
+dbg spt -l 0  -m SAPI
 dbg spt -l 0  -m vsip
+//Q921相关的trace输出
+dbg spt -l 0  -m IACS
+dbg spt -l 0  -m Q921
+dbg spt -l 0  -m CALL
+dbg spt -l 0  -m ICTT
+dbg spt -l 0  -m TIMR
+dbg spt -l 0  -m L2L3
+dbg spt -l 0  -m L2L1
 
 关闭:
 dbg spt -l 255

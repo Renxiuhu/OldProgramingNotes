@@ -1,3 +1,6 @@
-command: reviewme -T  "ALU02157301-code review" -D "modify StackMgr code for review comments" -d barretr -r 78ed1e0e4008
+command: reviewme -T  "ALU02157301-code review" -D "add Q921 module to Isdn over sip feature" -d barretr -r aecd4f5ceaf2
 
 aipkey:   1a064fb5db9e8ec41ceb3c66c0b2aa3640386fa5
+
+
+hg ci –m “IR ALU02157301:  [ISAM-V] your comments”
