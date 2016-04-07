@@ -20,6 +20,13 @@ dbg spt -l 0  -m L2L1
 关闭:
 dbg spt -l 255
 
+
+dbg ctb trace 2000000
+dbg svt trace nocycl
+dbg spt -l 0 -vtrace trace
+dbg spo module on
+dbg spo time on
+
 2, 上传权限
 LT:
 tapi enable write /data
