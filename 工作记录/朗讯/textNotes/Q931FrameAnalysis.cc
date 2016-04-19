@@ -1,5 +1,17 @@
 /*Q931 msg buffer打印函数备注解析
-
+*  L2~L3:   pad为原始的q921桢结构，其他为解析出来的附加信息
+*     Msg Buffer Length(BYTE 0) + Buffer Offset(BYTE 1) + pad (BYTE 2~7)
+*         + Discriminator(BYTE 8) + Reference (BYTE 9,10) + Msg Type (BYTE 11)
+*         + BA_UP_IE(BYTE 12,13,14) + Interface Id(BYTE15)
+*         + SAPI_IE(BYTE 16,17,18) + TEI_IE(BYTE 19,20,21)
+*         + Q931_PAYLOAD_IE(22) + q931_data_length (BYTE 23,24)
+*         + Q931 Msg Buffer (....)
+*
+*        Msg Buffer Length(BYTE 0) + Buffer Offset(BYTE 1) + pad (BYTE 2~7)
+*               + Discriminator(BYTE 8) + Reference (BYTE 9,10) + Msg Type (BYTE 11)
+*               + BA_UP_IE(BYTE 12,13,14) + Interface Id(BYTE15)
+*               + SAPI_IE(BYTE 16,17,18) + TEI_IE(BYTE 19,20,21)
+*               + TEI_CONF_IE(BYTE 22,23,24)
  */
 void IACS_PrintQ931Packet(u32 trace_flag, u8 *pData, u16 data_len)
 {

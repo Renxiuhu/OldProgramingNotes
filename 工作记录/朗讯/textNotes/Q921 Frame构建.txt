@@ -1,0 +1,46 @@
+1,PADR----->Q921
+((u16 *) data_)[0] = length;
+((u16 *) data_)[1] = ifId; //(ifId << 1) | 1;
+data_[4] = (sapi << 2)  | (CRon << 1) | 0;
+data_[5] = (tei  << 1)  | 1;
+
+SABME: U帧
+sapi=0 tei=0 CRon=0
+data[4] = (0 << 2)  | (0 << 1) | 0;
+data[5] = (0  << 1)  | 1;
+data[6] = 127; //01111111
+
+RR: S帧
+sapi=0 tei=0 CRon=1
+data[4] = (0 << 2)  | (1 << 1) | 0;
+data[5] = (0  << 1)  | 1;
+data[6] = 1
+data[7] = 1;//Fbit=1
+
+规则I: I帧setup
+sapi=0 tei=0 CRon=0
+data[4] = (0 << 2)  | (0 << 1) | 0;
+data[5] = (0  << 1)  | 1;
+data[6] = 0;
+data[7] = 1;
+data[11] = 5;
+
+不规则I帧：
+sapi=0 tei=0 CRon=1
+data[4] = (0 << 2)  | (1 << 1) | 0;
+data[5] = (0  << 1)  | 1;
+data[6] = 
+data[7] = 
+data[11] = 5;
+
+DISC：U帧
+sapi=0 tei=0 CRon=0
+data[4] = (0 << 2)  | (0 << 1) | 0;
+data[5] = (0  << 1)  | 1;
+data[6] = 83;
+
+2,Q921---->PADR
+frame_i = new L2I(ifId_, tei_, sapi, false, 0, data, dataLength);
+ startT203();
+
+

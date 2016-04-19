@@ -19,18 +19,41 @@ dbg spt -l 0  -m L2L1
 
 关闭:
 dbg spt -l 255
+rcom exec -b 1105 -c login kill
+login board 1105
 
-
+//Q921相关的trace输出
 dbg ctb trace 2000000
 dbg svt trace nocycl
-dbg spt -l 0 -vtrace trace
+dbg spt -l 0  -m IWU -vtrace trace
+dbg spt -l 0  -m STKM -vtrace trace
+dbg spt -l 0  -m UPWM -vtrace trace
+dbg spt -l 0  -m IACS -vtrace trace
+dbg spt -l 0  -m CALL -vtrace trace
+dbg spt -l 0  -m ICTT -vtrace trace
+dbg spt -l 0  -m L2L3 -vtrace trace
+dbg spt -l 0  -m Q931 -vtrace trace
+dbg spt -l 0  -m Q921 -vtrace trace
 dbg spo module on
 dbg spo time on
+dbg spt -l 0  -m IWU
+dbg spt -l 0  -m STKM
+dbg spt -l 0  -m UPWM
+dbg spt -l 0  -m IACS
+dbg spt -l 0  -m CALL
+dbg spt -l 0  -m ICTT
+dbg spt -l 0  -m L2L3
+dbg spt -l 0  -m Q931
+dbg spt -l 0  -m Q921
+
 
 2, 上传权限
 LT:
 tapi enable write /data
  tapi enable write /data/Sw
+tftp -v -m binary 135.251.92.3 -c put NDB4AA54.000  /data/Sw/NDB4AA54.348
+
+cp Sw/NDB4AA54.348 data/Sw/NDB4AA54.348
 
  NT:
  tapi enable write /Sw
