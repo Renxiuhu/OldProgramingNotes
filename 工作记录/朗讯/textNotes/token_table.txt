@@ -1,0 +1,33 @@
+static cde_token_item token_table[] =
+{
+	{"version",             Cde_parseVersion        },
+    {"profile",         Cde_parseProfile        },   
+    {"defaultCodec",           Cde_parseDefaultDataCodec },
+	{"defaultVBDCodec",         Cde_parseDefaultVBDCodec },
+	{"echo_canceller",          Cde_parseLec},
+	{"echo_tail",          Cde_parseLEchoTail},  //add by ALU02157301
+	{"echo_path_change_detection",	Cde_parseLEchopcd}, ——————未完成
+	{"AGC",          Cde_parseAgc},  
+    {"VAD",             Cde_parseVad},
+	{"voice_jitter",            Cde_parseJb },
+	{"faxModemMethod", Cde_parseFaxModemToneSendMethod},
+	{"faxMode",     Cde_parseFaxMode    },
+	{"IP_Inband_Tone_Detection",     Cde_parseVBDIPInBand },
+	{"egress_CNG_vbd_control",     Cde_parseEgressCngVbdControl},
+	{"allowedCodecs",       Cde_parseAllowedCodec   },	
+	{"t38_max_bitrate", Cde_parseT38MaxBitrate  },
+    {"t38_rate_mngt",       Cde_parseT38RateMngt    },
+    {"t38_udpec",           Cde_parseT38UdpEC       },
+	{"t38_conf",			Cde_parseT38Conf},  //add by ALU02157301
+	{"t38_version",			Cde_parseT38Version},  //add by ALU02157301
+	{"t38_bit_option",		Cde_parseT38BitOption},  //add by ALU02157301
+	{"t38_max_buffer", Cde_parseT38MaxBuffer}, 
+    {"t38_max_datagram", Cde_parseT38MaxDatagram}, 
+	{"q921_param",		Cde_parseQ921},  //add by ALU02157301
+	{"isdn_level3_param",	Cde_parseIsdnLevel3},  //add by ALU02157301
+	{"Heart_Beat",          Cde_parseHeartBeat},
+	{"DNSSweepTime",    Cde_parseDNSSweepTime },
+	{"reportCT",    Cde_parsereportCT },     ————参数问题？
+	{"CNGReportoff", Cde_parseCNGReportoff}, ————参数问题？
+	{NULL,			NULL  }
+};
