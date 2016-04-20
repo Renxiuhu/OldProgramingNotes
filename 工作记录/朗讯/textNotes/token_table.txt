@@ -6,7 +6,7 @@ static cde_token_item token_table[] =
 	{"defaultVBDCodec",         Cde_parseDefaultVBDCodec },
 	{"echo_canceller",          Cde_parseLec},
 	{"echo_tail",          Cde_parseLEchoTail},  //add by ALU02157301
-	{"echo_path_change_detection",	Cde_parseLEchopcd}, ——————未完成
+	{"echo_path_change_detection",	Cde_parseLEchopcd}, ——————未完成,MSP设置的???
 	{"AGC",          Cde_parseAgc},  
     {"VAD",             Cde_parseVad},
 	{"voice_jitter",            Cde_parseJb },
