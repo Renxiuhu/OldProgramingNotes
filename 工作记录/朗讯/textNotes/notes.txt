@@ -53,7 +53,7 @@ tapi enable write /data
  tapi enable write /data/Sw
 tftp -v -m binary 135.251.92.3 -c put NDB4AA54.000  /data/Sw/NDB4AA54.348
 
-cp Sw/NDB4AA54.348 data/Sw/NDB4AA54.348
+cp Sw/NDB4AA54.820 data/Sw/NDB4AA54.820
 
  NT:
  tapi enable write /Sw

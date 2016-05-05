@@ -1,0 +1,22 @@
+1. sendFrame 和 getFrame 都需要加一个参数,形式变为 
+	sendFrame(connId, (hdlcbuffer *) data_)  
+	getFrame(connId, (hdlcbuffer *) data_)
+2. 所有的q921 所有类型帧的构造函数需要加一个参数 和变量 – 大约改动13 个左右。
+3．对于 Q921 stack， SW 其实没有做任何修改，只有测试的effort，一旦修改，需要逐条消息进行测试。
+
+
+//===============================================================================
+1,L2MapIACS.hh: 需要修改L2Frame类中获取各个比特位值的函数
+				需要同时修改各个L2Frame子类ide获取值函数
+				各个Frame类型的构造函数
+				各个frame类型的sendme方法
+				
+2，Iacs.hh:		需要修改frame接收和解析计数的方法
+				之前写的T&D修改
+				IACS_PrintL2L1Buffer
+
+
+3，ISDNItf.hh： 需要修改帧解析处理的方法
+
+4，PADRProxy：sendFrame 和 getFrame 都需要加一个参数——————done
+
