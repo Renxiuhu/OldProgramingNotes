@@ -1,0 +1,100 @@
+alarm(以Unknown Sip Subscriber为例)
+1,Alarm
+Alrm_init.h -- define alarm structure
+        /* 1 : Unknown Sip Subscriber  */{ ALRM_COMM,         E_MAJOR,  ALRM_SERV_AFF,
+        /*                             */                             ALRM_REPORT,                         ALRM_LOG                     },
+
+2,TL1_Alarm
+AlarmTable.h – define detail index and description
+        { 0x00640001, SA_AID_SIP_ID, IDX1_IF_POTSCKT,  CraftAlarm::NullLocation, CraftAlarm::NullDirection,                 SA_CONDSIP_ID, SA_UNKNSIPS, -1, "Unknown sip subscriber", -1 }
+
+3,TL1_Language
+sa_base_comp.tl1
+        ("Unknown Sip subscriber"          SA_UNKNSIPS          )    
+            
+            
+4,CLI_AlarmReporting && CLI_IHUB
+parameterTypes_Alarm.xml
+        <alternative identifier="unknown-sub"       help="subscriber exist in the POLT, but not in the appl       server" value="(long)6553601"/>
+        
+parameterTypes_Alarm.xml
+         <parameter-type name="Alarm::unknownSubscriber"> 
+            <help>SIP subscrbr exist in POLT,not in sip application server</help>
+            <fields>
+                <alternative-field name="" basic-type="Alarm::intBitmask_1">
+                    <alternatives> 
+                        <alternative identifier="yes" help="wrong subscriber" value="&quot;2&quot;"/>
+                        <alternative identifier="no" help="right subscriber" value="&quot;0&quot;"/>
+                    </alternatives>
+                </alternative-field>
+            </fields>
+        </parameter-type>
+
+showCurrAlarmTable.xml
+         <display-ele name="unknown-sub" parameter-type="Alarm::unknownSubscriber">
+           <help>specfies the sip subscriber unknow or not.</help>
+           <show when="extensive"/>
+           <fields>
+             <field name="">
+               <master name="_asamCurrentAlarmStatus"/>
+             </field>
+           </fields>
+         </display-ele>
+         
+showAlarmSnapshot.xml
+        <display-ele name="unknown-sub" parameter-type="Alarm::unknownSubscriber">
+             <help>specifies the sip subscriber unknown or not.</help>
+           <show when="always"/>
+           <fields>
+             <field name="">
+               <master name="_asamAlarmSnapshotStatus"/>
+             </field>
+           </fields>
+         </display-ele>
+         
+showAlarmLogTable.xml
+         <display-ele name="unknown-sub" parameter-type="Alarm::unknownSubscriber">
+              <help>specfies the sip subscriber unknow or not.</help>
+            <show when="always"/>
+            <fields>
+              <field name="">
+                <master name="_asamAlarmLogAlarmStatus"/>
+              </field>
+            </fields>
+          </display-ele>
+          
+          <display-ele name="prev-status" parameter-type="Alarm::unknownSubscriber">
+           <help>status of specifies subscribers with its previous logged value</help>
+           <show when="extensive"/>
+           <fields>
+             <field name="">
+               <master name="_asamAlarmLogStatusChange"/>
+             </field>
+           </fields>
+         </display-ele>
+
+5,VoiceAppMgntNt
+export/VoiceConfigServer.idl
+         oneway void alarm_unknowSubscriber(in voice_types::LogicalIndex term_eqpt_index,
+                     in voice_types::uint16 status);
+                     
+include/ConfigServer.hpp
+        static const unsigned long alarm_unknowSubscriber_c = 0x02;
+        
+        virtual void alarm_unknowSubscriber(const voice_types::LogicalIndex& term_eqpt_index,
+                         voice_types::uint16 status,
+                         IOCM::InvocationAsync& invocation);
+                         
+source/VoiceAppMgntNt_ConfigServer.cpp    
+         const char * sipTermAlarmInfo_Description[SIP_TERM_ALM_NUMBER]={     "Unknow Sip Subscriber",
+        
+        
+6,VoiceAppMgntLsm
+VappLsmClass.cpp
+        case alarm_unknowSubscriber
+            mAlarmreport_ifc.alarm_SIPTermination(term_unknowSubscriber,mTermProfile[ifindex].mLogIndex,        status/*,ris*/);
+
+export/VappLsmTypes.hpp
+        term_unknowSubscriber =1,
+        
+        const    vappalarm_t    alarm_unknowSubscriber =2;
