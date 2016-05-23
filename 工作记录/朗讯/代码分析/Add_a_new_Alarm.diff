@@ -1,0 +1,657 @@
+diff --git a/vobs/dsl/sw/flat/Alarm/handler/export/alrm_init.h b/vobs/dsl/sw/flat/Alarm/handler/export/alrm_init.h
+--- a/vobs/dsl/sw/flat/Alarm/handler/export/alrm_init.h
++++ b/vobs/dsl/sw/flat/Alarm/handler/export/alrm_init.h
+@@ -2165,6 +2165,12 @@ ALRM_UNUSED_TYPE,
+ /*                             */                                              ALRM_REPORT, ALRM_LOG                     },
+ /* 20: Emergency Call Active(ECALLACT)*/{ ALRM_COMM,         E_MINOR,           ALRM_SERV_NOT_AFF,                            
+                                                                                 ALRM_REPORT, ALRM_LOG                    },
++/* 21: AIS signal (SIPISDNAIS) */{ALRM_COMM,       E_MAJOR,         ALRM_SERV_AFF,
++/*                             */                                    ALRM_REPORT,   ALRM_LOG                     },
++/* 22: LOS signal (SIPISDNLOS) */{ALRM_COMM,       E_MAJOR,         ALRM_SERV_AFF,
++/*                             */                       ALRM_REPORT,                                           ALRM_LOG                     },
++/* 23: RAI signal (SIPISDNRAI) */{ALRM_COMM,       E_MAJOR,         ALRM_SERV_AFF,
++/*                             */                              ALRM_REPORT,                                   ALRM_LOG                     },
+ /*******************************************************************************************************************************/
+ /* unused_nr26..31         */  ALRM_UNUSED_NR, ALRM_UNUSED_NR, ALRM_UNUSED_NR, ALRM_UNUSED_NR, ALRM_UNUSED_NR, ALRM_UNUSED_NR
+ /*******************************************************************************************************************************/
+diff --git a/vobs/dsl/sw/flat/CLI_AlarmReporting/parameterTypes_Alarm.xml b/vobs/dsl/sw/flat/CLI_AlarmReporting/parameterTypes_Alarm.xml
+--- a/vobs/dsl/sw/flat/CLI_AlarmReporting/parameterTypes_Alarm.xml
++++ b/vobs/dsl/sw/flat/CLI_AlarmReporting/parameterTypes_Alarm.xml
+@@ -1129,6 +1129,9 @@
+         <alternative identifier="subs-refreshfail"  help="Subscribe failure (refresh failure)." value="(long)6553618"/>
+         <alternative identifier="subs-inittimeout"  help="Subscribe failure (initial REQ timeout)." value="(long)6553619"/>
+         <alternative identifier="emergency-call"    help="Emergency call is ongoing." value="(long)6553620"/>
++        <alternative identifier="ais-signal"    help="Alarm Indication Signal detected at E1 interface." value="(long)6553621"/>
++        <alternative identifier="los-signal"    help="Loss Of Signal detected at E1 interface." value="(long)6553622"/>
++        <alternative identifier="rai-signal"    help="Remote Alarm Indication detected at E1 interface." value="(long)6553623"/>
+         <alternative identifier="transport-mismatch"         help="Transport protocol mismatch" value="(long)12845057"/>
+         <alternative identifier="dns-lookup-failure"         help="Dns look up failure" value="(long)12845058"/>
+         <alternative identifier="none-dns-srv"         help="No reply for all DNS serverd" value="(long)12713986"/>
+@@ -1857,6 +1860,9 @@
+         <alternative identifier="subs-refreshfail"  help="Subscribe failure (refresh failure)." value="(long)6553618"/>
+         <alternative identifier="subs-inittimeout"  help="Subscribe failure (initial REQ timeout)." value="(long)6553619"/>
+         <alternative identifier="emergency-call"    help="Emergency call is ongoing." value="(long)6553620"/>
++        <alternative identifier="ais-signal"    help="Alarm Indication Signal detected at E1 interface." value="(long)6553621"/>
++        <alternative identifier="los-signal"    help="Loss Of Signal detected at E1 interface." value="(long)6553622"/>   
++        <alternative identifier="rai-signal"    help="Remote Alarm Indication detected at E1 interface." value="(long)6553623"/>
+         <alternative identifier="transport-mismatch"         help="Transport protocol mismatch" value="(long)12845057"/>
+         <alternative identifier="dns-lookup-failure"         help="Dns look up failure" value="(long)12845058"/>
+         <alternative identifier="none-dns-srv"         help="No reply for all DNS serverd" value="(long)12713986"/>
+@@ -6026,6 +6032,42 @@
+     </fields>
+   </parameter-type>
+ 
++  <parameter-type name="Alarm::aissignal">
++   <help>Alarm Indication Signal detected at E1 interface</help>
++    <fields>
++      <alternative-field name="" basic-type="Alarm::intBitmask_21">
++        <alternatives>
++          <alternative identifier="yes" help="Alarm Indication Signal detected at E1 interface" value="&quot;2097152&quot;"/>
++          <alternative identifier="no" help="no Alarm Indication Signal detected at E1 interface" value="&quot;0&quot;"/>
++        </alternatives>
++      </alternative-field>
++    </fields>
++  </parameter-type>
++
++  <parameter-type name="Alarm::lossignal">
++   <help>Loss Of Signal detected at E1 interface</help>
++    <fields>
++      <alternative-field name="" basic-type="Alarm::intBitmask_22">
++        <alternatives>
++          <alternative identifier="yes" help="Loss Of Signal detected at E1 interface" value="&quot;4194304&quot;"/>
++          <alternative identifier="no" help="no Loss Of Signal detected at E1 interface" value="&quot;0&quot;"/>
++        </alternatives>
++      </alternative-field>
++    </fields>
++  </parameter-type>
++
++  <parameter-type name="Alarm::raisignal">
++   <help>Remote Alarm Indication detected at E1 interface</help>
++    <fields>
++      <alternative-field name="" basic-type="Alarm::intBitmask_23">
++        <alternatives>
++          <alternative identifier="yes" help="Remote Alarm Indication detected at E1 interface" value="&quot;8388608&quot;"/>
++          <alternative identifier="no" help="no Remote Alarm Indication detected at E1 interface" value="&quot;0&quot;"/>
++        </alternatives>
++      </alternative-field>
++    </fields>
++  </parameter-type>
++
+   <parameter-type name="Alarm::pluginApsf">
+    <help>applique power supply failure</help>
+     <fields>
+@@ -15692,6 +15734,9 @@
+           <alternative identifier="subs-refreshfail"  help="Subscribe failure (refresh failure)." value="(long)6553618"/>
+           <alternative identifier="subs-inittimeout"  help="Subscribe failure (initial REQ timeout)." value="(long)6553619"/>
+           <alternative identifier="emergency-call"    help="Emergency call is ongoing." value="(long)6553620"/>
++          <alternative identifier="ais-signal"    help="Alarm Indication Signal detected at E1 interface." value="(long)6553621"/>
++          <alternative identifier="los-signal"    help="Loss Of Signal detected at E1 interface." value="(long)6553622"/>   
++          <alternative identifier="rai-signal"    help="Remote Alarm Indication detected at E1 interface." value="(long)6553623"/>
+           <alternative identifier="all" help="show all sip termination alarm" value="(unsigned long)6553600"/>
+         </alternatives>
+       </alternative-field>
+diff --git a/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmLogTable.xml b/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmLogTable.xml
+--- a/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmLogTable.xml
++++ b/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmLogTable.xml
+@@ -7537,6 +7537,63 @@
+           </fields>
+         </display-ele>
+ 
++        <display-ele name="ais-signal" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal.</help>
++          <show when="always"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="prev-status" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal with its previous logged value</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogStatusChange"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="los-signal" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm.</help>
++          <show when="always"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="prev-status" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm with its previous logged value</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogStatusChange"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="rai-signal" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication.</help>
++          <show when="always"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="prev-status" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication with its previous logged value</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogStatusChange"/>
++            </field>
++          </fields>
++        </display-ele>
++
+         </section>
+       </sections>
+ 
+diff --git a/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmSnapshot.xml b/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmSnapshot.xml
+--- a/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmSnapshot.xml
++++ b/vobs/dsl/sw/flat/CLI_AlarmReporting/showAlarmSnapshot.xml
+@@ -4635,6 +4635,36 @@
+           </fields>
+         </display-ele>
+ 
++        <display-ele name="ais-signal" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmSnapshotStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="los-signal" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmSnapshotStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="rai-signal" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmSnapshotStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
+       </parameters>
+       <fields>
+         <field name="sip-termination" basic-type="SignedInteger" access="CommandFieldDefinition::mayBeReadDuringDisplay_c|CommandFieldDefinition::isFilter_c" default="(long)100">
+diff --git a/vobs/dsl/sw/flat/CLI_AlarmReporting/showCurrAlarmTable.xml b/vobs/dsl/sw/flat/CLI_AlarmReporting/showCurrAlarmTable.xml
+--- a/vobs/dsl/sw/flat/CLI_AlarmReporting/showCurrAlarmTable.xml
++++ b/vobs/dsl/sw/flat/CLI_AlarmReporting/showCurrAlarmTable.xml
+@@ -4505,6 +4505,33 @@
+             </field>
+           </fields>
+         </display-ele>
++        <display-ele name="ais-signal" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamCurrentAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="los-signal" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamCurrentAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="rai-signal" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamCurrentAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
+         <display-ele name="additional-info" parameter-type="Alarm::AddInfoString">
+           <help>Additional information regarding the reg-srvfailresp alarm.</help>
+           <show when="extensive"/>
+diff --git a/vobs/dsl/sw/flat/CLI_IHUB/showAlarmLogTableIpd.xml b/vobs/dsl/sw/flat/CLI_IHUB/showAlarmLogTableIpd.xml
+--- a/vobs/dsl/sw/flat/CLI_IHUB/showAlarmLogTableIpd.xml
++++ b/vobs/dsl/sw/flat/CLI_IHUB/showAlarmLogTableIpd.xml
+@@ -7848,6 +7848,63 @@
+             </field>
+           </fields>
+         </display-ele>
++
++        <display-ele name="ais-signal" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal.</help>
++          <show when="always"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="prev-status" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal with its previous logged value</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogStatusChange"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="los-signal" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm.</help>
++          <show when="always"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="prev-status" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm with its previous logged value</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogStatusChange"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="rai-signal" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication.</help>
++          <show when="always"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++        <display-ele name="prev-status" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication with its previous logged value</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmLogStatusChange"/>
++            </field>
++          </fields>
++        </display-ele>
+  
+         </section>
+       </sections>
+diff --git a/vobs/dsl/sw/flat/CLI_IHUB/showAlarmSnapshotIpd.xml b/vobs/dsl/sw/flat/CLI_IHUB/showAlarmSnapshotIpd.xml
+--- a/vobs/dsl/sw/flat/CLI_IHUB/showAlarmSnapshotIpd.xml
++++ b/vobs/dsl/sw/flat/CLI_IHUB/showAlarmSnapshotIpd.xml
+@@ -5075,6 +5075,36 @@
+           </fields>
+         </display-ele> 
+ 
++        <display-ele name="ais-signal" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmSnapshotStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="los-signal" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmSnapshotStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="rai-signal" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamAlarmSnapshotStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
+       </parameters>
+       <fields>
+         <field name="sip-termination" basic-type="SignedInteger" access="CommandFieldDefinition::mayBeReadDuringDisplay_c|CommandFieldDefinition::isFilter_c" default="(long)100">
+diff --git a/vobs/dsl/sw/flat/CLI_IHUB/showCurrAlarmTableIpd.xml b/vobs/dsl/sw/flat/CLI_IHUB/showCurrAlarmTableIpd.xml
+--- a/vobs/dsl/sw/flat/CLI_IHUB/showCurrAlarmTableIpd.xml
++++ b/vobs/dsl/sw/flat/CLI_IHUB/showCurrAlarmTableIpd.xml
+@@ -5126,6 +5126,37 @@
+           </fields>
+         </display-ele>
+ 
++
++        <display-ele name="ais-signal" parameter-type="Alarm::aissignal">
++          <help>status of Alarm Indication Signal.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamCurrentAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="los-signal" parameter-type="Alarm::lossignal">
++          <help>status of Loss Of Signal Alarm.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamCurrentAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
++        <display-ele name="rai-signal" parameter-type="Alarm::raisignal">
++          <help>status of Remote Alarm Indication.</help>
++          <show when="extensive"/>
++          <fields>
++            <field name="">
++              <master name="_asamCurrentAlarmStatus"/>
++            </field>
++          </fields>
++        </display-ele>
++
+         <display-ele name="additional-info" parameter-type="Alarm::AddInfoString">
+           <help>Additional information regarding the reg-srvfailresp alarm.</help>
+           <show when="extensive"/>
+diff --git a/vobs/dsl/sw/flat/TL1_Alarm/AlarmTable.h b/vobs/dsl/sw/flat/TL1_Alarm/AlarmTable.h
+--- a/vobs/dsl/sw/flat/TL1_Alarm/AlarmTable.h
++++ b/vobs/dsl/sw/flat/TL1_Alarm/AlarmTable.h
+@@ -904,6 +904,9 @@ AlarmTable [] = {
+ { 0x00640013, SA_AID_SIP_ID, IDX1_IF_POTSCKT,  CraftAlarm::NullLocation, CraftAlarm::NullDirection, SA_CONDSIP_ID, SA_SIPSUBSTO, -1, "Subscribe failure (initial REQ timeout)", -1 },
+ // { 0x00640014, SA_AID_SIP_ID, IDX1_IF_POTSCKT,  CraftAlarm::NullLocation, CraftAlarm::NullDirection, SA_CONDSIP_ID, SA_ECALLACT, -1, "Emergency Call Active", -1 },
+ { 0x00640014, SA_AID_SIP_ID, IDX1_IF_POTSCKT,  CraftAlarm::NullLocation, CraftAlarm::NullDirection, SA_CONDSIP_ID, SA_SIPEMERGCALL, -1, "Emergency Call Active", -1 },  // FR ALU02081078 by jcsu
++{ 0x00640015, SA_AID_SIP_ID, IDX1_IF_POTSCKT,  CraftAlarm::NullLocation, CraftAlarm::NullDirection,           SA_CONDSIP_ID, SA_SIPISDNAIS, -1, "Alarm Indication Signal detected at E1 interface", -1 },
++{ 0x00640016, SA_AID_SIP_ID, IDX1_IF_POTSCKT,  CraftAlarm::NullLocation, CraftAlarm::NullDirection,           SA_CONDSIP_ID, SA_SIPISDNLOS, -1, "Loss Of Signal detected at E1 interface", -1 },
++{ 0x00640017, SA_AID_SIP_ID, IDX1_IF_POTSCKT,  CraftAlarm::NullLocation, CraftAlarm::NullDirection,            SA_CONDSIP_ID, SA_SIPISDNRAI, -1, "Remote Alarm Indication detected at E1 interface", -1 },
+ //fdt1376 end
+ #endif
+ 
+diff --git a/vobs/dsl/sw/flat/TL1_Common/export/sa_parm_enum_type.h b/vobs/dsl/sw/flat/TL1_Common/export/sa_parm_enum_type.h
+--- a/vobs/dsl/sw/flat/TL1_Common/export/sa_parm_enum_type.h
++++ b/vobs/dsl/sw/flat/TL1_Common/export/sa_parm_enum_type.h
+@@ -3364,6 +3364,9 @@ typedef enum    e_SA_CONDALL_ENUM
+     SA_SIPSUBSRF,
+     SA_SIPSUBSTO,
+     SA_SIPEMERGCALL,
++    SA_SIPISDNAIS,
++    SA_SIPISDNLOS,
++    SA_SIPISDNRAI,
+     SA_IMPROPRMVL,
+     SA_INIT,
+     SA_IQCLKOOL,
+diff --git a/vobs/dsl/sw/flat/TL1_Language/sa_base_comp.tl1 b/vobs/dsl/sw/flat/TL1_Language/sa_base_comp.tl1
+--- a/vobs/dsl/sw/flat/TL1_Language/sa_base_comp.tl1
++++ b/vobs/dsl/sw/flat/TL1_Language/sa_base_comp.tl1
+@@ -4661,6 +4661,9 @@ Description:    Contains TL1 definitions
+         ("SIPSUBSRF"              SA_SIPSUBSRF        )
+         ("SIPSUBSTO"              SA_SIPSUBSTO        )
+ 	("SIPEMERGCALL"            SA_SIPEMERGCALL      )
++        ("SIPISDNAIS"             SA_SIPISDNAIS       )
++        ("SIPISDNLOS"             SA_SIPISDNLOS       )
++        ("SIPISDNRAI"             SA_SIPISDNRAI       )
+         ("TRANSPORTMISMATCH"      SA_SIPTRANSPORTMISMATCH )
+         ("DNSLOOKUPFAILURE"      SA_SIPDNSLOOKUPFAILURE )
+         ("NONEDNSSRV"             SA_SIPNONEDNSSRV    )
+@@ -6709,6 +6712,9 @@ Description:    Contains TL1 definitions
+         ("SIPSUBSRF"              SA_SIPSUBSRF        )
+         ("SIPSUBSTO"              SA_SIPSUBSTO        )
+         ("SIPEMERGCALL"            SA_SIPEMERGCALL      )
++        ("SIPISDNAIS"             SA_SIPISDNAIS       )
++        ("SIPISDNLOS"             SA_SIPISDNLOS       )
++        ("SIPISDNRAI"             SA_SIPISDNRAI       )
+         ("TRANSPORTMISMATCH"      SA_SIPTRANSPORTMISMATCH )
+         ("DNSLOOKUPFAILURE"      SA_SIPDNSLOOKUPFAILURE )
+         ("NONEDNSSRV"             SA_SIPNONEDNSSRV    )
+@@ -6752,6 +6758,9 @@ Description:    Contains TL1 definitions
+         ("Refresh failure (subscribe)"                   SA_SIPSUBSRF        )
+         ("Initial REQ timeout (subscribe)"               SA_SIPSUBSTO        )
+         ("Emergency Call"            SA_SIPEMERGCALL      )
++        ("Alarm Indication Signal"     SA_SIPISDNAIS )
++        ("Loss Of Signal"              SA_SIPISDNLOS )
++        ("Remote Alarm Indication"     SA_SIPISDNRAI )
+         ("Transport protocol mismatch"                   SA_SIPTRANSPORTMISMATCH )
+          ("Dns look up failure"      SA_SIPDNSLOOKUPFAILURE )
+         ("None dns server give reply to dns look up"     SA_SIPNONEDNSSRV    )
+diff --git a/vobs/dsl/sw/flat/VoiceAppMgntLsm/VappLsmClass.cpp b/vobs/dsl/sw/flat/VoiceAppMgntLsm/VappLsmClass.cpp
+--- a/vobs/dsl/sw/flat/VoiceAppMgntLsm/VappLsmClass.cpp
++++ b/vobs/dsl/sw/flat/VoiceAppMgntLsm/VappLsmClass.cpp
+@@ -7473,7 +7473,11 @@ errcode VAppMgntLsm::AlarmAudit()
+     //fdt1376 end
+     //ALU01880552 Add emergncyCall alarm check in alarm audit
+     voice_types::S_LogicalIndex tmpTermIdx_emergencyCall;
+-
++#ifdef ISDN_SIP_PRI
++    voice_types::S_LogicalIndex tmpTermIdx_E1AISAlarm;
++    voice_types::S_LogicalIndex tmpTermIdx_E1LOSAlarm;
++    voice_types::S_LogicalIndex tmpTermIdx_E1RAIAlarm;
++#endif
+ 
+     u_int16 termNum_groundKey=0;
+     u_int16 termNum_portHighTemperature=0;
+@@ -7499,6 +7503,11 @@ errcode VAppMgntLsm::AlarmAudit()
+     //fdt1376 end
+     //ALU01880552 Add emergncyCall alarm check in alarm audit
+     u_int16 termNum_emergencyCall = 0;
++#ifdef ISDN_SIP_PRI
++    u_int16 termNum_E1AISAlarm = 0;
++    u_int16 termNum_E1LOSAlarm = 0;
++    u_int16 termNum_E1RAIAlarm = 0;
++#endif
+ 
+     tmpTermIdx_groundKey.createBuffer(TotalTermNum);
+     tmpTermIdx_portHighTemperature.createBuffer(TotalTermNum);
+@@ -7523,6 +7532,11 @@ errcode VAppMgntLsm::AlarmAudit()
+     //fdt1376 end
+     //ALU01880552 Add emergncyCall alarm check in alarm audit
+     tmpTermIdx_emergencyCall.createBuffer(TotalTermNum);
++#ifdef ISDN_SIP_PRI
++    tmpTermIdx_E1AISAlarm.createBuffer(TotalTermNum);
++    tmpTermIdx_E1LOSAlarm.createBuffer(TotalTermNum);
++    tmpTermIdx_E1RAIAlarm.createBuffer(TotalTermNum);
++#endif
+ 
+     tmpTermIdx_groundKey.setLength(TotalTermNum);
+     tmpTermIdx_portHighTemperature.setLength(TotalTermNum);
+@@ -7547,6 +7561,12 @@ errcode VAppMgntLsm::AlarmAudit()
+     //fdt1376 end
+     //ALU01880552 Add emergncyCall alarm check in alarm audit
+     tmpTermIdx_emergencyCall.setLength(TotalTermNum);
++#ifdef ISDN_SIP_PRI
++    tmpTermIdx_E1AISAlarm.setLength(TotalTermNum);
++    tmpTermIdx_E1LOSAlarm.setLength(TotalTermNum);
++    tmpTermIdx_E1RAIAlarm.setLength(TotalTermNum);
++#endif
++
+ 
+ // alarm additionalInfo ALU01962510
+     voice_types::String additonalInfo_regSrvFailResp; 
+@@ -7718,6 +7738,26 @@ errcode VAppMgntLsm::AlarmAudit()
+                     = mTermProfile[termidx].mLogIndex;
+                 termNum_emergencyCall++;
+             }
++         #ifdef ISDN_SIP_PRI
++            if(alarm_up == mTermProfile[termidx].mE1AISAlarmStatus)
++            {
++                tmpTermIdx_E1AISAlarm[termNum_E1AISAlarm]
++                    = mTermProfile[termidx].mLogIndex;
++                termNum_E1AISAlarm++;
++            }
++            if(alarm_up == mTermProfile[termidx].mE1LOSAlarmStatus)
++            {
++                tmpTermIdx_E1LOSAlarm[termNum_E1LOSAlarm]
++                    = mTermProfile[termidx].mLogIndex;
++                termNum_E1LOSAlarm++;
++            }
++            if(alarm_up == mTermProfile[termidx].mE1RAIAlarmStatus)
++            {
++                tmpTermIdx_E1RAIAlarm[termNum_E1RAIAlarm]
++                    = mTermProfile[termidx].mLogIndex;
++                termNum_E1RAIAlarm++;
++            }
++         #endif   
+ 
+             if(bIsdn)
+             {
+@@ -7849,6 +7889,23 @@ errcode VAppMgntLsm::AlarmAudit()
+         tmpTermIdx_emergencyCall.setLength(termNum_emergencyCall);
+         mAlarmreport_ifc.alarm_SIPTerminationBulk(term_emergencyCall,tmpTermIdx_emergencyCall,alarm_up);
+     }
++#ifdef ISDN_SIP_PRI
++    if(termNum_E1AISAlarm>0)
++    {
++        tmpTermIdx_E1AISAlarm.setLength(termNum_E1AISAlarm);
++        mAlarmreport_ifc.alarm_SIPTerminationBulk(term_padrL1AISAlarm,tmpTermIdx_E1AISAlarm,alarm_up);
++    }
++    if(termNum_E1AISAlarm>0)
++    {
++        tmpTermIdx_E1LOSAlarm.setLength(termNum_E1LOSAlarm);
++        mAlarmreport_ifc.alarm_SIPTerminationBulk(term_padrL1LOSAlarm,tmpTermIdx_E1LOSAlarm,alarm_up);
++    }
++    if(termNum_E1RAIAlarm>0)
++    {
++        tmpTermIdx_E1RAIAlarm.setLength(termNum_E1RAIAlarm);
++        mAlarmreport_ifc.alarm_SIPTerminationBulk(term_padrL1RAIAlarm,tmpTermIdx_E1RAIAlarm,alarm_up);
++    }
++#endif
+     if (bBadDigitMap == TRUE)  // ALU00290236
+     {
+         VSIP_TRACE(
+@@ -8594,7 +8651,53 @@ errcode VAppMgntLsm::AlarmReport(vappala
+                 "alarm_SSPMissingInCDE=%d\n\r",
+                 __LINE__, __FUNCTION__, status);
+             break;
+-           
++         #ifdef ISDN_SIP_PRI
++        case alarm_PadrL1AISAlarm:
++            if(ifindex > TotalTermNum - 1)
++            {
++                err_printf (0, ERR_CLASS_NOTIFY_ONLY, "VSIP",
++                    __FILE__, __LINE__,
++                    "VAppMgntLsm::AlarmReport():padrL1AISAlarm ifidx %d error\r\n",ifindex);
++                return ERR_INPUT;
++            }
++            if( status != mTermProfile[ifindex].mE1AISAlarmStatus)
++                mAlarmreport_ifc.alarm_SIPTermination(term_padrL1AISAlarm,mTermProfile[ifindex].mLogIndex,status);
++            trc_printf(VoiceAppLsm_TRACE,
++                "[VappLsmClass, %u] VAppMgntLsm::%s "
++                "alarm_PadrL1AISAlarm=%d\n\r",
++                __LINE__, __FUNCTION__, status);
++            break;
++        case alarm_PadrL1LOSAlarm:
++            if(ifindex > TotalTermNum - 1)
++            {
++                err_printf (0, ERR_CLASS_NOTIFY_ONLY, "VSIP",
++                    __FILE__, __LINE__,
++                    "VAppMgntLsm::AlarmReport():padrL1LOSAlarm ifidx %d error\r\n",ifindex);
++                return ERR_INPUT;
++            }
++            if( status != mTermProfile[ifindex].mE1LOSAlarmStatus)
++                mAlarmreport_ifc.alarm_SIPTermination(term_padrL1LOSAlarm,mTermProfile[ifindex].mLogIndex,status);
++            trc_printf(VoiceAppLsm_TRACE,
++                "[VappLsmClass, %u] VAppMgntLsm::%s "
++                "alarm_PadrL1LOSAlarm=%d\n\r",
++                __LINE__, __FUNCTION__, status);
++            break;
++        case alarm_PadrL1RAIAlarm:
++            if(ifindex > TotalTermNum - 1)
++            {
++                err_printf (0, ERR_CLASS_NOTIFY_ONLY, "VSIP",
++                    __FILE__, __LINE__,
++                    "VAppMgntLsm::AlarmReport():padrL1RAIAlarm ifidx %d error\r\n",ifindex);
++                return ERR_INPUT;
++            }
++            if( status != mTermProfile[ifindex].mE1RAIAlarmStatus)
++                mAlarmreport_ifc.alarm_SIPTermination(term_padrL1RAIAlarm,mTermProfile[ifindex].mLogIndex,status);
++            trc_printf(VoiceAppLsm_TRACE,
++                "[VappLsmClass, %u] VAppMgntLsm::%s "
++                "alarm_PadrL1RAIAlarm=%d\n\r",
++                __LINE__, __FUNCTION__, status);
++            break;
++         #endif 
+          case notify_baddigitmap:  // ALU00290236
+            mAlarmreport_ifc.notify_SIPBadDigitMap(ifindex/*,ris*/); 
+             trc_printf(VoiceAppLsm_TRACE,
+diff --git a/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/TermClass.hpp b/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/TermClass.hpp
+--- a/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/TermClass.hpp
++++ b/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/TermClass.hpp
+@@ -126,6 +126,11 @@ public:
+   #endif
+     //fdt1376 end
+     alarmstatus mEmergencyCallStatus;	
++#ifdef ISDN_SIP_PRI
++    alarmstatus mE1AISAlarmStatus;
++    alarmstatus mE1LOSAlarmStatus;
++    alarmstatus mE1RAIAlarmStatus;
++#endif
+     voice_types::String mAddtionalInfoForRegServerFailureResp;
+ 
+ };
+diff --git a/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/VappLsmTypes.hpp b/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/VappLsmTypes.hpp
+--- a/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/VappLsmTypes.hpp
++++ b/vobs/dsl/sw/flat/VoiceAppMgntLsm/export/VappLsmTypes.hpp
+@@ -164,7 +164,12 @@ term_subsAuthenticate,
+ term_subsRefreshFail,
+ term_subsInitTimeout,
+ //fdt1376
+-term_emergencyCall = 20
++term_emergencyCall = 20,
++#ifdef ISDN_SIP_PRI
++term_padrL1AISAlarm,
++term_padrL1LOSAlarm,
++term_padrL1RAIAlarm
++#endif
+ };
+ 
+ enum term_warmline_alarmtype{
+diff --git a/vobs/dsl/sw/flat/VoiceAppMgntNt/source/VoiceAppMgntNt_ConfigServer.cpp b/vobs/dsl/sw/flat/VoiceAppMgntNt/source/VoiceAppMgntNt_ConfigServer.cpp
+--- a/vobs/dsl/sw/flat/VoiceAppMgntNt/source/VoiceAppMgntNt_ConfigServer.cpp
++++ b/vobs/dsl/sw/flat/VoiceAppMgntNt/source/VoiceAppMgntNt_ConfigServer.cpp
+@@ -146,7 +146,8 @@ namespace VoiceAppMgntNt{
+ // fdt873 begin
+ //#define SIP_ALM_NUMBER                10
+ #define SIP_PLUGIN_ALM_NUMBER 5
+-#define SIP_TERM_ALM_NUMBER 20//fdt1182//fdt1376
++
++#define SIP_TERM_ALM_NUMBER 23//fdt1182//fdt1376
+ // end fdt873
+ 
+ #define INVALID_TGID 73
+@@ -230,6 +231,9 @@ const char * sipTermAlarmInfo_Descriptio
+     "Subscribe : inital REQ timeout",
+     //fdt1376 end
+      "Emergency call is ongoing",
++    "Alarm Indication Signal detected at E1 interface",
++    "Loss Of Signal detected at E1 interface",
++    "Remote Alarm Indication detected at E1 interface",
+     };
+ // end fdt873
+ 
