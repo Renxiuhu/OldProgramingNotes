@@ -17,6 +17,7 @@ dbg spt -l 0  -m TIMR
 dbg spt -l 0  -m L2L3
 dbg spt -l 0  -m L2L1
 
+dbg spt -l 0 -m MEMM
 关闭:
 dbg spt -l 255
 rcom exec -b 1105 -c login kill
