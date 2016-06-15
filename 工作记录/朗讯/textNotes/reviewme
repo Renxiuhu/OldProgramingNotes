@@ -9,8 +9,3 @@ hg ci –m “IR ALU02157301:  [ISAM-V] your comments”
 cvm:  260477a46f3699690457f2fc7700614767d4b0c8
 
  vobs/dsl/sw/flat/BUILDCFG/extRepo/VoiceCommon_lib.cfg
- 
- 
- hg ci -m "IR ALU02157301:  [ISAM-V] add type in octFALC_itf.h " octFALC_itf.h
- 
- ALU02046042
